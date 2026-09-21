@@ -1,507 +1,409 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JING · 个人主页</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-  }
-</script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>胡景晟 · AI 应用与 Agent 开发</title>
+<meta name="description" content="胡景晟（Jing）— AI 应用开发 / Agent 开发。把「AI 能跑」做成「AI 能用」。">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-  .gradient-text {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .card-hover {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .card-hover:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-  }
-  .dark .card-hover:hover {
-    box-shadow: 0 12px 40px rgba(99,102,241,0.15);
-  }
-  .theme-toggle {
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  .theme-toggle:hover { transform: rotate(30deg); }
-  ::selection { background: #6366f1; color: white; }
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#fbfaf9;--card:#fff;--line:#e9e7e4;--text:#1c1b1a;--muted:#6f6b66;
+  --accent:#5b46f2;--accent2:#8b5cf6;
+  --shadow:0 1px 2px rgba(28,27,26,.04),0 10px 28px -14px rgba(28,27,26,.14);
+}
+html[data-theme=dark]{
+  --bg:#0e0e11;--card:#17171c;--line:#26262e;--text:#f2f1ef;--muted:#9d9a95;
+  --accent:#8b7cff;--accent2:#a78bfa;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -18px rgba(0,0,0,.7);
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  transition:background .25s,color .25s;
+}
+a{color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:56px 22px 64px}
+@media(max-width:640px){.wrap{padding:40px 18px 56px}}
 
-  /* Chat Widget */
-  .chat-fab {
-    position: fixed; bottom: 24px; right: 24px; z-index: 999;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white; border: none; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(99,102,241,0.35);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; transition: transform .25s, box-shadow .25s;
-  }
-  .chat-fab:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(99,102,241,0.5); }
-  .chat-fab.hidden { display: none; }
+/* 头部 */
+.head{margin-bottom:52px}
+.name{
+  margin:0 0 6px;font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.02em;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.tag{margin:0 0 14px;color:var(--muted);font-size:14px}
+.pitch{margin:0 0 20px;font-size:15.5px;max-width:60ch}
+.pitch b{font-weight:600}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);font-size:13.5px;text-decoration:none;
+  transition:border-color .18s,transform .18s,color .18s;cursor:pointer;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.btn.primary:hover{color:#fff;opacity:.92}
 
-  .chat-panel {
-    position: fixed; bottom: 96px; right: 24px; z-index: 999;
-    width: 380px; max-width: calc(100vw - 48px); height: 520px; max-height: calc(100vh - 140px);
-    background: white; border-radius: 16px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
-    display: flex; flex-direction: column;
-    transform: translateY(20px) scale(0.95); opacity: 0;
-    pointer-events: none; transition: transform .25s, opacity .25s;
-  }
-  .dark .chat-panel { background: #1f2937; box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
-  .chat-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+/* 区块 */
+.sec{margin-bottom:44px}
+.sec h2{
+  margin:0 0 18px;font-size:12px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+}
+.card{
+  display:block;padding:20px 22px;margin-bottom:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  text-decoration:none;box-shadow:var(--shadow);
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+}
+.card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.card-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.card h3{margin:0;font-size:17px;font-weight:600}
+.card .role{font-size:12.5px;color:var(--muted)}
+.card p{margin:0 0 12px;color:var(--muted);font-size:14px}
+.metrics{display:flex;flex-wrap:wrap;gap:7px}
+.metrics span{
+  padding:3px 10px;border-radius:999px;font-size:12.5px;
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+  color:var(--accent);font-variant-numeric:tabular-nums;
+}
 
-  .chat-header {
-    padding: 14px 18px; border-bottom: 1px solid #e5e7eb;
-    display: flex; align-items: center; justify-content: space-between;
-    font-weight: 600; font-size: 15px; color: #1f2937;
-  }
-  .dark .chat-header { border-color: #374151; color: #f3f4f6; }
-  .chat-header-close { cursor: pointer; color: #9ca3af; font-size: 18px; transition: color .15s; }
-  .chat-header-close:hover { color: #6366f1; }
+/* 小工具列表 */
+.tools{list-style:none;margin:0;padding:0}
+.tools li{
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:13px 0;border-bottom:1px solid var(--line);
+}
+.tools li:last-child{border-bottom:0}
+.tools a{font-weight:600;text-decoration:none}
+.tools a:hover{color:var(--accent)}
+.tools .desc{color:var(--muted);font-size:13.5px;flex:1;min-width:200px}
+.tools .star{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 
-  .chat-messages {
-    flex: 1; overflow-y: auto; padding: 14px;
-    display: flex; flex-direction: column; gap: 10px;
-  }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+/* 技能 */
+.skills{display:flex;flex-direction:column;gap:9px;font-size:14px}
+.skills div{display:flex;gap:10px;flex-wrap:wrap}
+.skills dt{color:var(--muted);min-width:76px;font-size:13px}
+.skills dd{margin:0;flex:1;min-width:220px}
 
-  .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.6; word-break: break-word; }
-  .msg.user { align-self: flex-end; background: #6366f1; color: white; border-bottom-right-radius: 4px; }
-  .msg.assistant { align-self: flex-start; background: #f3f4f6; color: #1f2937; border-bottom-left-radius: 4px; }
-  .dark .msg.assistant { background: #374151; color: #e5e7eb; }
-  .msg.assistant p { margin: 0; }
-  .msg.assistant p + p { margin-top: 6px; }
-  .msg.assistant code { background: rgba(0,0,0,0.08); padding: 1px 5px; border-radius: 3px; font-size: 13px; }
-  .dark .msg.assistant code { background: rgba(255,255,255,0.1); }
+/* 页脚 */
+footer{
+  margin-top:52px;padding-top:22px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  color:var(--muted);font-size:13px;
+}
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);
+  background:var(--text);color:var(--bg);padding:9px 18px;border-radius:999px;
+  font-size:13px;opacity:0;pointer-events:none;transition:opacity .22s,transform .22s;z-index:60;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
-  .typing { align-self: flex-start; padding: 10px 16px; background: #f3f4f6; border-radius: 14px; border-bottom-left-radius: 4px; display: none; }
-  .dark .typing { background: #374151; }
-  .typing.show { display: flex; gap: 4px; align-items: center; }
-  .typing span { width: 7px; height: 7px; border-radius: 50%; background: #9ca3af; animation: bounce 1.4s infinite; }
-  .typing span:nth-child(2) { animation-delay: .2s; }
-  .typing span:nth-child(3) { animation-delay: .4s; }
-  @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+/* 主题开关 */
+.toggle{
+  position:fixed;top:18px;right:18px;z-index:50;width:38px;height:38px;
+  display:grid;place-items:center;cursor:pointer;
+  background:var(--card);border:1px solid var(--line);border-radius:50%;
+  color:var(--muted);box-shadow:var(--shadow);transition:color .2s,transform .2s;
+}
+.toggle:hover{color:var(--accent);transform:rotate(18deg)}
 
-  .suggested { padding: 0 14px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .suggested-chip { font-size: 12px; padding: 5px 10px; border-radius: 14px; background: #eef2ff; color: #6366f1; border: none; cursor: pointer; transition: background .15s; white-space: nowrap; }
-  .suggested-chip:hover { background: #e0e7ff; }
-  .dark .suggested-chip { background: #312e81; color: #c7d2fe; }
-  .dark .suggested-chip:hover { background: #3730a3; }
-
-  .chat-input-area {
-    padding: 10px 14px; border-top: 1px solid #e5e7eb;
-    display: flex; gap: 8px; align-items: flex-end;
-  }
-  .dark .chat-input-area { border-color: #374151; }
-  .chat-input-area input {
-    flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid #e5e7eb;
-    font-size: 14px; outline: none; transition: border-color .15s;
-    background: #f9fafb; color: #1f2937;
-  }
-  .dark .chat-input-area input { background: #374151; border-color: #4b5563; color: #e5e7eb; }
-  .chat-input-area input:focus { border-color: #6366f1; }
-  .chat-send-btn {
-    width: 36px; height: 36px; border-radius: 50%; border: none;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;
-    cursor: pointer; font-size: 14px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity .15s;
-  }
-  .chat-send-btn:disabled { opacity: 0.5; cursor: default; }
-  @media (max-width: 480px) { .chat-panel { width: calc(100vw - 32px); right: 16px; bottom: 88px; height: 460px; } }
+/* 问答 */
+.fab{
+  position:fixed;right:20px;bottom:20px;z-index:55;width:52px;height:52px;border:0;cursor:pointer;
+  border-radius:50%;color:#fff;font-size:15px;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));
+  box-shadow:0 8px 24px -8px color-mix(in srgb,var(--accent) 60%,transparent);
+  transition:transform .2s,opacity .2s;
+}
+.fab:hover{transform:scale(1.06)}
+.fab.hide{opacity:0;pointer-events:none}
+.panel{
+  position:fixed;right:20px;bottom:84px;z-index:56;
+  width:360px;max-width:calc(100vw - 32px);height:480px;max-height:calc(100vh - 130px);
+  display:flex;flex-direction:column;overflow:hidden;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);
+  opacity:0;transform:translateY(14px) scale(.97);pointer-events:none;
+  transition:opacity .22s,transform .22s;
+}
+.panel.open{opacity:1;transform:none;pointer-events:auto}
+.panel header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px;font-weight:600;
+}
+.panel header button{background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;line-height:1}
+.log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.log::-webkit-scrollbar{width:5px}
+.log::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.m{max-width:86%;padding:9px 13px;border-radius:13px;font-size:13.5px;line-height:1.65;word-break:break-word;white-space:pre-wrap}
+.m.u{align-self:flex-end;background:linear-gradient(120deg,var(--accent),var(--accent2));color:#fff;border-bottom-right-radius:4px}
+.m.a{align-self:flex-start;background:color-mix(in srgb,var(--text) 6%,transparent);border-bottom-left-radius:4px}
+.m code{background:color-mix(in srgb,var(--text) 10%,transparent);padding:1px 5px;border-radius:4px;font-size:12.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}
+.chips button{
+  font-size:12px;padding:5px 11px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--muted);
+}
+.chips button:hover{color:var(--accent);border-color:var(--accent)}
+.ask{display:flex;gap:8px;padding:11px 14px;border-top:1px solid var(--line)}
+.ask input{
+  flex:1;padding:9px 14px;border-radius:999px;font-size:13.5px;font-family:inherit;
+  border:1px solid var(--line);background:var(--bg);color:var(--text);outline:none;
+}
+.ask input:focus{border-color:var(--accent)}
+.ask button{
+  width:36px;height:36px;flex:0 0 auto;border:0;border-radius:50%;cursor:pointer;color:#fff;font-size:13px;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));
+}
+.ask button:disabled{opacity:.45;cursor:default}
+.dots{align-self:flex-start;display:flex;gap:4px;padding:11px 15px;border-radius:13px;background:color-mix(in srgb,var(--text) 6%,transparent)}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:b 1.3s infinite}
+.dots span:nth-child(2){animation-delay:.18s}
+.dots span:nth-child(3){animation-delay:.36s}
+@keyframes b{0%,62%,100%{transform:translateY(0);opacity:.5}32%{transform:translateY(-6px);opacity:1}}
 </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+<body>
 
-<div class="max-w-4xl mx-auto px-5 py-12 md:py-20">
+<div class="toggle" id="toggle" title="切换主题" role="button" tabindex="0">◐</div>
 
-  <!-- Theme toggle -->
-  <div class="fixed top-5 right-5 z-50">
-    <button onclick="toggleTheme()" class="theme-toggle w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-xl border border-gray-200 dark:border-gray-700">
-      <i id="theme-icon" class="fa fa-sun-o text-amber-500"></i>
-    </button>
-  </div>
+<div class="wrap">
 
-  <!-- Header -->
-  <header class="mb-20 text-center">
-    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white text-4xl font-bold mb-6 shadow-lg shadow-indigo-500/25">
-      J
-    </div>
-    <h1 class="text-4xl md:text-5xl font-bold mb-3">
-      <span class="gradient-text">JING</span>
-    </h1>
-    <p class="text-lg text-gray-500 dark:text-gray-400 mb-2">
-      计算机科学与技术 2303 班
+  <header class="head">
+    <h1 class="name">胡景晟 · Jing</h1>
+    <p class="tag">AI 应用开发 / Agent 开发 &nbsp;·&nbsp; 2027 届 &nbsp;·&nbsp; 河南理工大学 计算机科学与技术</p>
+    <p class="pitch">
+      我关心的是模型之外的那些事：<b>输出能不能真的用、多轮之后贵不贵、出错的时候降不降得住</b>。
+      所以项目里测试、降级链和成本台账占的篇幅，比「接了个大模型」多得多。
     </p>
-    <p class="text-gray-600 dark:text-gray-300 max-w-xl mx-auto leading-relaxed">
-      专注 <strong>Python · Java · AI Agent</strong> 技术栈，热爱开源，致力于用代码解决真实痛点。
-    </p>
-
-    <!-- Stats -->
-    <div class="flex justify-center gap-6 mt-6 text-sm">
-      <a href="https://github.com/JING04-PRODUCER?tab=repositories" class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
-        <i class="fa fa-code-fork"></i> 3 个项目
-      </a>
-      <a href="https://juejin.cn/user/3573851322" class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
-        <i class="fa fa-file-text"></i> 掘金文章
-      </a>
-      <a href="mailto:3573851322@qq.com" class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
-        <i class="fa fa-envelope"></i> 联系
-      </a>
+    <div class="links">
+      <a class="btn primary" href="https://github.com/UniqueDevJing" target="_blank" rel="noopener">GitHub</a>
+      <button class="btn" id="mailBtn" data-mail="UniqueDevJing@foxmail.com">UniqueDevJing@foxmail.com</button>
+      <a class="btn" href="https://github.com/UniqueDevJing?tab=repositories" target="_blank" rel="noopener">全部仓库</a>
     </div>
   </header>
 
-  <!-- Projects -->
-  <section class="mb-20">
-    <h2 class="text-center text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-10">
-      🚀 开源项目
-    </h2>
+  <section class="sec">
+    <h2>主力项目</h2>
 
-    <!-- PromptSlim -->
-    <a href="https://github.com/JING04-PRODUCER/promptslim" target="_blank" class="block bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mb-5 border border-gray-100 dark:border-gray-700 card-hover group">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div class="flex-1">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">🪒</span>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">PromptSlim</h3>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">v0.3.0</span>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-            AI 提示词瘦身工具包——在 API 调用前自动剃掉冗余 Token，<strong>节省 5%~75%</strong>。40+ 条中英文冗余模式、代码保护、Anthropic Prompt Caching 缓存分析、LLM 语义压缩。
-          </p>
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            <span class="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">Python</span>
-            <span class="px-2 py-0.5 rounded-md bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400">Anthropic Caching</span>
-            <span class="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400">中英文双语</span>
-            <span class="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">tiktoken</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 md:flex-col md:items-end text-sm text-gray-400 dark:text-gray-500 shrink-0">
-          <span class="flex items-center gap-1"><i class="fa fa-star"></i> Star</span>
-          <img src="https://img.shields.io/github/stars/JING04-PRODUCER/promptslim?style=flat-square" alt="stars" class="h-5" />
-        </div>
+    <a class="card" href="http://114.215.186.113/canvas/" target="_blank" rel="noopener">
+      <div class="card-top">
+        <h3>CodeCanvas</h3>
+        <span class="role">一句话生成可运行的 Web 应用</span>
+      </div>
+      <p>
+        五阶段状态机编排：需求澄清 → 任务规划 → 代码生成 → 质量校验 → 自检修复。
+        生成物必须先过确定性静态校验才有资格交付；页面运行时报错也会被探针捕获并自动重做。
+      </p>
+      <div class="metrics">
+        <span>15 次实测零误报</span>
+        <span>第 8 轮上下文仅占全量 15%</span>
+        <span>同等 token 量成本降 75%</span>
       </div>
     </a>
 
-    <!-- AI Cost Sentinel -->
-    <a href="https://github.com/JING04-PRODUCER/ai-cost-sentinel" target="_blank" class="block bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mb-5 border border-gray-100 dark:border-gray-700 card-hover group">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div class="flex-1">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">🛡️</span>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">AI Cost Sentinel</h3>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">v0.2.0</span>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-            <strong>一行代码不改</strong>，透明追踪 AI API 调用成本。透明代理拦截请求，自动记录 Token 消耗与费用。20+ 模型定价、预算告警、CSV 导出、模型成本对比、Slack Webhook 通知。
-          </p>
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            <span class="px-2 py-0.5 rounded-md bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400">FastAPI</span>
-            <span class="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">Spring Boot</span>
-            <span class="px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400">SQLite</span>
-            <span class="px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400">Webhook 告警</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 md:flex-col md:items-end text-sm text-gray-400 dark:text-gray-500 shrink-0">
-          <span class="flex items-center gap-1"><i class="fa fa-star"></i> Star</span>
-          <img src="https://img.shields.io/github/stars/JING04-PRODUCER/ai-cost-sentinel?style=flat-square" alt="stars" class="h-5" />
-        </div>
+    <a class="card" href="https://github.com/UniqueDevJing/Mira" target="_blank" rel="noopener">
+      <div class="card-top">
+        <h3>Mira</h3>
+        <span class="role">RAG 问答的可信护栏</span>
+      </div>
+      <p>
+        回答里的每个数字都必须能在检索原文里找到依据，对不上就拒答并附原文。
+        校验层是纯规则实现（AST 白名单求值，禁用 eval），不靠模型自查。
+      </p>
+      <div class="metrics">
+        <span>幻觉拦截率 100%</span>
+        <span>正确回答误拒率 0%</span>
+        <span>按 MCP 对外输出</span>
       </div>
     </a>
 
-    <!-- AgentOrchestrator -->
-    <a href="https://github.com/JING04-PRODUCER/agent-orchestrator" target="_blank" class="block bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 mb-5 border border-gray-100 dark:border-gray-700 card-hover group">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-        <div class="flex-1">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="text-2xl">🤖</span>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">AgentOrchestrator</h3>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">v0.3.0</span>
-          </div>
-          <p class="text-gray-600 dark:text-gray-400 leading-relaxed mb-3">
-            跨语言 AI Agent 编排平台——<strong>Python FastAPI 推理核心 + Java Spring Boot 管理面板</strong>。Function Calling、多 Agent 工作流、Web Search 工具、RAG 记忆系统、插件化工具注册中心。
-          </p>
-          <div class="flex flex-wrap gap-1.5 text-xs">
-            <span class="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">Python 3.12+</span>
-            <span class="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">Java 21</span>
-            <span class="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400">Web Search</span>
-            <span class="px-2 py-0.5 rounded-md bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400">RAG 记忆</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 md:flex-col md:items-end text-sm text-gray-400 dark:text-gray-500 shrink-0">
-          <span class="flex items-center gap-1"><i class="fa fa-star"></i> Star</span>
-          <img src="https://img.shields.io/github/stars/JING04-PRODUCER/agent-orchestrator?style=flat-square" alt="stars" class="h-5" />
-        </div>
+    <a class="card" href="https://github.com/UniqueDevJing/triagent" target="_blank" rel="noopener">
+      <div class="card-top">
+        <h3>triagent</h3>
+        <span class="role">医疗分诊多 Agent 系统 · Spring AI</span>
+      </div>
+      <p>
+        急症（红旗）症状由状态机强制短路，不经过模型；分诊与预约 Agent 共享结论，
+        「该去急诊却挂了普通号」会被确定性拦住。
+      </p>
+      <div class="metrics">
+        <span>0 次模型调用</span>
+        <span>6–24ms 返回</span>
+        <span>危险方向误判 0 例</span>
       </div>
     </a>
   </section>
 
-  <!-- Skills -->
-  <section class="mb-20">
-    <h2 class="text-center text-sm font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-10">
-      🛠 技术栈
-    </h2>
-    <div class="flex flex-wrap justify-center gap-3">
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-code mr-1 text-indigo-500"></i> Python
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-coffee mr-1 text-orange-500"></i> Java
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-bolt mr-1 text-teal-500"></i> FastAPI
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-leaf mr-1 text-green-500"></i> Spring Boot
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-database mr-1 text-sky-500"></i> SQLite / PostgreSQL
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-cube mr-1 text-blue-500"></i> Docker
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-git mr-1 text-red-500"></i> Git
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        <i class="fa fa-linux mr-1 text-gray-700 dark:text-gray-300"></i> Linux
-      </span>
-      <span class="px-4 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm">
-        🤖 AI Agent / LLM
-      </span>
-    </div>
+  <section class="sec">
+    <h2>小工具</h2>
+    <ul class="tools">
+      <li>
+        <a href="https://github.com/UniqueDevJing/promptslim" target="_blank" rel="noopener">promptslim</a>
+        <span class="desc">调用前压缩 Prompt，砍冗余但保住代码块与语义</span>
+        <span class="star">省 5–40% Token · 7★</span>
+      </li>
+      <li>
+        <a href="https://github.com/UniqueDevJing/ai-cost-sentinel" target="_blank" rel="noopener">ai-cost-sentinel</a>
+        <span class="desc">改一行 base_url 就接入的 LLM 成本追踪代理</span>
+        <span class="star">20+ 模型定价 · 8★</span>
+      </li>
+      <li>
+        <a href="https://github.com/UniqueDevJing/agent-orchestrator" target="_blank" rel="noopener">agent-orchestrator</a>
+        <span class="desc">Python 推理核心 + Java 管理面板，跨语言 Agent 编排</span>
+        <span class="star">8★</span>
+      </li>
+      <li>
+        <a href="https://github.com/UniqueDevJing/job-apply-assistant" target="_blank" rel="noopener">job-apply-assistant</a>
+        <span class="desc">求职流程管理桌面应用</span>
+        <span class="star">Electron</span>
+      </li>
+    </ul>
   </section>
 
-  <!-- Footer -->
-  <footer class="text-center border-t border-gray-200 dark:border-gray-700 pt-8">
-    <div class="flex justify-center gap-6 mb-4">
-      <a href="https://github.com/JING04-PRODUCER" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl transition-colors" title="GitHub">
-        <i class="fa fa-github"></i>
-      </a>
-      <a href="https://juejin.cn/user/3573851322" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl transition-colors" title="掘金">
-        <i class="fa fa-file-text"></i>
-      </a>
-      <a href="mailto:3573851322@qq.com" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl transition-colors" title="邮箱">
-        <i class="fa fa-envelope"></i>
-      </a>
-    </div>
-    <p class="text-xs text-gray-400 dark:text-gray-500">
-      欢迎交流 AI Agent / LLM 应用开发 · updated 2026-06-18
-    </p>
+  <section class="sec">
+    <h2>技术栈</h2>
+    <dl class="skills">
+      <div><dt>AI 应用</dt><dd>Agent 编排（ReAct / Supervisor）· Function Calling · RAG 检索重排 · MCP · Prompt 与上下文工程</dd></div>
+      <div><dt>Java</dt><dd>Spring Boot 3 · Spring AI · LangChain4j · MyBatis-Plus · MySQL · Redis</dd></div>
+      <div><dt>Python</dt><dd>FastAPI · Pydantic · asyncio · pytest</dd></div>
+      <div><dt>工程</dt><dd>SSE 流式 · 多模型接入与降级 · Docker · nginx · systemd</dd></div>
+    </dl>
+  </section>
+
+  <footer>
+    <span>© <span id="yr">2026</span> 胡景晟</span>
+    <span><a href="https://github.com/UniqueDevJing" target="_blank" rel="noopener">github.com/UniqueDevJing</a></span>
   </footer>
 
 </div>
 
-<!-- Chat Widget -->
-<button class="chat-fab" id="chatFab" onclick="toggleChat()" title="与我对话">
-  <i class="fa fa-commenting"></i>
-</button>
+<div class="toast" id="toast">邮箱已复制</div>
 
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-header">
-    <span>💬 与我对话</span>
-    <span class="chat-header-close" onclick="toggleChat()">&times;</span>
+<button class="fab" id="fab" title="问我点什么">问</button>
+
+<div class="panel" id="panel">
+  <header>
+    <span>关于我，随便问</span>
+    <button id="close">&times;</button>
+  </header>
+  <div class="log" id="log">
+    <div class="m a">我是这个页面的问答助手，基于我自己写的一套检索流程来回答。可以问项目、技术选型或者怎么联系我。</div>
   </div>
-  <div class="chat-messages" id="chatMessages">
-    <div class="msg assistant">
-      你好！我是 JING 的 AI 助手 👋<br>可以问我关于他的项目、技术栈、求职方向等问题。
-    </div>
+  <div class="chips" id="chips">
+    <button>CodeCanvas 的自检修复是怎么做的？</button>
+    <button>Mira 为什么不让模型自己检查？</button>
+    <button>现在找什么方向的岗位？</button>
   </div>
-  <div class="typing" id="typing">
-    <span></span><span></span><span></span>
-  </div>
-  <div class="suggested" id="suggested">
-    <button class="suggested-chip" onclick="sendSuggested(this)">PromptSlim 能省多少 Token？</button>
-    <button class="suggested-chip" onclick="sendSuggested(this)">三个项目分别做什么？</button>
-    <button class="suggested-chip" onclick="sendSuggested(this)">怎么联系 JING？</button>
-  </div>
-  <div class="chat-input-area">
-    <input type="text" id="chatInput" placeholder="输入问题，按回车发送…" onkeydown="if(event.key==='Enter')sendMessage()">
-    <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">
-      <i class="fa fa-send"></i>
-    </button>
+  <div class="ask">
+    <input id="in" placeholder="输入问题，回车发送" autocomplete="off">
+    <button id="send">发送</button>
   </div>
 </div>
 
 <script>
-  const html = document.documentElement;
-  const icon = document.getElementById('theme-icon');
+(function(){
+  var root=document.documentElement, tg=document.getElementById('toggle');
+  var saved=null;
+  try{saved=localStorage.getItem('theme');}catch(e){}
+  if(saved==='light'){root.removeAttribute('data-theme');}
+  else if(saved==='dark'){root.setAttribute('data-theme','dark');}
+  else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){root.setAttribute('data-theme','dark');}
+  tg.onclick=function(){
+    var dark=root.getAttribute('data-theme')==='dark';
+    if(dark){root.removeAttribute('data-theme');}else{root.setAttribute('data-theme','dark');}
+    try{localStorage.setItem('theme',dark?'light':'dark');}catch(e){}
+  };
 
-  // Init theme from localStorage or system preference
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
-    html.classList.remove('dark');
-    icon.className = 'fa fa-moon-o text-indigo-500';
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  var toast=document.getElementById('toast'), tt=null;
+  function tip(msg){
+    toast.textContent=msg;toast.classList.add('show');
+    clearTimeout(tt);tt=setTimeout(function(){toast.classList.remove('show');},1600);
   }
+  var mb=document.getElementById('mailBtn');
+  mb.onclick=function(){
+    var mail=mb.dataset.mail;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(mail).then(function(){tip('邮箱已复制');},function(){location.href='mailto:'+mail;});
+    }else{location.href='mailto:'+mail;}
+  };
 
-  function toggleTheme() {
-    if (html.classList.contains('dark')) {
-      html.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      icon.className = 'fa fa-moon-o text-indigo-500';
-    } else {
-      html.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      icon.className = 'fa fa-sun-o text-amber-500';
-    }
+  // ── 问答 ──
+  var ENDPOINT='https://jing-chat-proxy.remarkable-balaur.workers.dev/chat';
+  var CONTEXT=[
+    '胡景晟（Jing），河南理工大学计算机科学与技术，2027 届，找 AI 应用开发 / Agent 开发方向。',
+    'CodeCanvas：一句话生成可运行 Web 应用。五阶段状态机编排（需求澄清→任务规划→代码生成→质量校验→自检修复），',
+    '生成物先过确定性静态校验（标签闭合、脚本语法、占位残留）才交付，页面运行时报错由探针捕获后自动重做；',
+    '多轮对话把需求固化成需求单，只带需求单+变更摘要+相关文件，第 8 轮注入量约为全量的 15%；',
+    '按厂商真实价目表核对模型定价，同等 token 量成本降 75%。地址 http://114.215.186.113/canvas/',
+    'Mira：RAG 问答的可信护栏。回答里每个数字都要能在检索原文里找到依据，对不上就拒答并附原文；',
+    '校验层是纯规则实现（AST 白名单求值、禁 eval），不依赖模型自查；幻觉拦截 100%、正确回答误拒 0%；按 MCP 对外输出。',
+    'triagent：医疗分诊多 Agent 系统（Spring AI）。急症由状态机强制短路，0 次模型调用、6–24ms 返回；',
+    '分诊与预约 Agent 共享结论，避免误挂普通号；30 例黄金集评测，危险方向误判 0 例。',
+    '其他仓库：promptslim（调用前压缩 Prompt，省 5–40% Token）、ai-cost-sentinel（成本追踪代理）、agent-orchestrator（跨语言 Agent 编排）。',
+    '技术栈：Java、Python、Spring Boot、Spring AI / LangChain4j、FastAPI、MySQL、Redis、SSE、MCP。',
+    '联系：UniqueDevJing@foxmail.com，GitHub github.com/UniqueDevJing。'
+  ].join('');
+
+  var log=document.getElementById('log'), panel=document.getElementById('panel'),
+      fab=document.getElementById('fab'), inp=document.getElementById('in'),
+      send=document.getElementById('send'), chips=document.getElementById('chips');
+  var history=[], busy=false;
+
+  function push(role,text,save){
+    var d=document.createElement('div');
+    d.className='m '+(role==='user'?'u':'a');
+    d.textContent=text;
+    log.appendChild(d);log.scrollTop=log.scrollHeight;
+    if(save!==false){history.push({role:role,content:text});}
+    return d;
   }
-
-  // ── Chat Widget ──
-  const NVIDIA_KEY = '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';
-  const PROXY_URL = 'https://jing-chat-proxy.remarkable-balaur.workers.dev/chat';
-  const MODEL = 'meta/llama-3.1-8b-instruct';
-
-  const SYSTEM_PROMPT = `你是 JING 的 AI 助手，专门回答关于他的问题。用友好专业的语气，回复控制在 200 字以内，中文优先。
-
-关于 JING：
-- 计算机科学与技术专业在读，Python 主力开发（三年经验），Java 辅助（一年）
-- 专注 AI Agent 基础设施方向，正在求职（Base 不限）
-- 三个开源项目（都在 github.com/JING04-PRODUCER）：
-  1. PromptSlim：AI 提示词压缩引擎，40+ 冗余模式，实测节省 5%~75% Token，代码保护、Anthropic Prompt Caching 缓存分析、LLM 语义压缩，兼容 GPT/Claude/DeepSeek/Qwen
-  2. AI Cost Sentinel：LLM API 成本透明代理，一行代码不改即可追踪费用，内置 20+ 模型定价、日/月预算告警、CSV 导出、Slack Webhook 通知、Spring Boot + Chart.js 可视化仪表盘
-  3. AgentOrchestrator：跨语言多 Agent 编排平台，Python FastAPI 推理核心 + Java Spring Boot 管理面板，支持 Function Calling、顺序/并行/DAG 工作流、DuckDuckGo Web Search、RAG 记忆系统、插件化工具注册，兼容 OpenAI 接口
-- 技术栈：Python、Java、FastAPI、Spring Boot、SQLite、Docker、Git、Linux、OpenAI API、Anthropic Claude API
-- 邮箱：3573851322@qq.com，GitHub：JING04-PRODUCER，掘金：juejin.cn/user/3573851322
-
-规则：
-- 不知道的事情诚实说不知道，可以用 JING 的背景合理推测
-- 技术问题可以深入回答，展现专业性
-- 有人想联系时给出邮箱和 GitHub
-- 回复简洁，不要说"我是AI助手"之类的废话`;
-
-  const chatFab = document.getElementById('chatFab');
-  const chatPanel = document.getElementById('chatPanel');
-  const chatMessages = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendBtn');
-  const typing = document.getElementById('typing');
-  const suggested = document.getElementById('suggested');
-  let isOpen = false;
-  let isSending = false;
-
-  // Load history
-  const CHAT_KEY = 'portfolio_chat_history';
-  let messages = [];
-  try {
-    const saved = localStorage.getItem(CHAT_KEY);
-    if (saved) {
-      messages = JSON.parse(saved);
-      if (messages.length > 0) {
-        chatMessages.innerHTML = '';
-        messages.forEach(m => appendMessage(m.role, m.content, false));
-        suggested.style.display = 'none';
-      }
-    }
-  } catch(e) {}
-
-  function saveHistory() {
-    try { localStorage.setItem(CHAT_KEY, JSON.stringify(messages)); } catch(e) {}
+  function dots(){
+    var d=document.createElement('div');
+    d.className='dots';d.innerHTML='<span></span><span></span><span></span>';
+    log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
   }
+  fab.onclick=function(){panel.classList.add('open');fab.classList.add('hide');setTimeout(function(){inp.focus();},220);};
+  document.getElementById('close').onclick=function(){panel.classList.remove('open');fab.classList.remove('hide');};
+  chips.addEventListener('click',function(e){
+    if(e.target.tagName==='BUTTON'){ask(e.target.textContent);}
+  });
 
-  function toggleChat() {
-    isOpen = !isOpen;
-    chatPanel.classList.toggle('open', isOpen);
-    chatFab.classList.toggle('hidden', isOpen);
-    if (isOpen) {
-      setTimeout(() => {
-        chatInput.focus();
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }, 250);
-    }
+  function ask(text){
+    var q=(text||inp.value).trim();
+    if(!q||busy){return;}
+    busy=true;send.disabled=true;inp.value='';chips.style.display='none';
+    push('user',q,true);
+    var ph=dots();
+    fetch(ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:[{role:'system',content:'你在胡景晟的个人主页上，替他回答访客提问。语气平实、就事论事，不要客套话和营销腔，不要自称 AI 助手。控制在 150 字以内，中文。已知信息：'+CONTEXT}].concat(history.slice(-6)),
+        temperature:0.6,
+        max_tokens:500
+      })
+    }).then(function(r){
+      if(!r.ok){throw new Error('HTTP '+r.status);}
+      return r.json();
+    }).then(function(d){
+      ph.remove();
+      var out=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content;
+      push('assistant',out||'没拿到回复，稍后再试。',true);
+    }).catch(function(){
+      ph.remove();
+      push('assistant','问答服务暂时没连上。可以直接发邮件到 UniqueDevJing@foxmail.com。',false);
+    }).then(function(){busy=false;send.disabled=false;inp.focus();});
   }
-
-  function appendMessage(role, content, save) {
-    const div = document.createElement('div');
-    div.className = 'msg ' + role;
-    div.innerHTML = content.replace(/\n/g, '<br>');
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-    if (save !== false) {
-      messages.push({ role, content });
-      saveHistory();
-    }
-  }
-
-  function showTyping(show) {
-    typing.classList.toggle('show', show);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  async function sendMessage(text) {
-    if (isSending) return;
-    const input = text || chatInput.value.trim();
-    if (!input) return;
-
-    isSending = true;
-    sendBtn.disabled = true;
-    chatInput.value = '';
-    suggested.style.display = 'none';
-
-    appendMessage('user', input, true);
-    showTyping(true);
-
-    try {
-      const apiMessages = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...messages.map(m => ({ role: m.role, content: m.content }))
-      ];
-
-      const resp = await fetch(PROXY_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + NVIDIA_KEY
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: apiMessages,
-          temperature: 0.7,
-          max_tokens: 600,
-          top_p: 0.9
-        })
-      });
-
-      if (!resp.ok) {
-        const err = await resp.text();
-        throw new Error(err);
-      }
-
-      const data = await resp.json();
-      const reply = data.choices[0].message.content;
-      showTyping(false);
-      appendMessage('assistant', reply, true);
-
-    } catch(e) {
-      showTyping(false);
-      let errMsg = '抱歉，请求失败了。可能是网络问题或 API 暂时不可用，请稍后再试。';
-      if (e.message.includes('CORS') || e.message.includes('Failed to fetch') || e.name === 'TypeError') {
-        errMsg = '请求被浏览器拦截（CORS 限制）。请通过本地服务器打开此页面（如 python -m http.server），或稍后再试。';
-      }
-      appendMessage('assistant', errMsg, true);
-    }
-
-    isSending = false;
-    sendBtn.disabled = false;
-    chatInput.focus();
-  }
-
-  function sendSuggested(btn) {
-    sendMessage(btn.textContent);
-  }
+  send.onclick=function(){ask();};
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){ask();}});
+})();
 </script>
-
 </body>
 </html>
