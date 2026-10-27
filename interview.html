@@ -236,6 +236,21 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
   .qarrow{display:none}
   body{background:#fff}
 }
+
+/* 技术栈能力矩阵 */
+.matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:2px 0 6px}
+.matrix .mxcol{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 13px;box-shadow:0 1px 3px rgba(80,40,120,.06)}
+.matrix .mxtitle{font-weight:700;font-size:13px;color:var(--accent);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.matrix .mxitem{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--text);padding:5px 0;line-height:1.35;border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.matrix .mxitem:last-child{border-bottom:none}
+.matrix .lvl{font-size:12px;font-weight:700;white-space:nowrap;letter-spacing:1px}
+.lvl.deep{color:var(--ok)}
+.lvl.mid{color:var(--accent)}
+.lvl.base{color:#9a9a9a}
+.mxleg{font-size:12px;color:var(--muted);margin:6px 0 20px;line-height:1.7}
+.mxleg .lvl{margin:0 4px 0 2px}
+.grp{font-size:15.5px;font-weight:700;color:var(--accent);margin:24px 0 10px;padding-left:11px;border-left:3px solid var(--accent);letter-spacing:.3px}
+@media(max-width:760px){.matrix{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -478,58 +493,172 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);
       <!-- 5 技术栈 -->
       <section class="sec" id="s5">
         <h2>技术栈追问（按 JD 维度）</h2>
-        <p class="secnote">这一节不背概念，背「你什么时候用过、为什么这么选」。下面每个点都给了可说的口径 + 实例。</p>
+        <p class="secnote">这一节不背概念，背「你什么时候用过、为什么这么选」。每个问题都按「口播答案 + 实例 + 追问预案 + 避坑」展开。先把熟练度分层看清楚——能深聊的、能浅聊的、别硬撑的，一眼分清。</p>
+
+        <!-- 能力分层矩阵 -->
+        <div class="matrix">
+          <div class="mxcol">
+            <div class="mxtitle">A · AI 框架与 Agent</div>
+            <div class="mxitem"><span>ReAct / Plan-and-Execute / Supervisor 选型</span><span class="lvl deep">★★★</span></div>
+            <div class="mxitem"><span>Agent 防跑飞（状态机/白名单/沙箱/护栏）</span><span class="lvl deep">★★★</span></div>
+            <div class="mxitem"><span>MCP / Tool Calling</span><span class="lvl mid">★★</span></div>
+          </div>
+          <div class="mxcol">
+            <div class="mxtitle">B · RAG 与上下文</div>
+            <div class="mxitem"><span>RAG 评测（Recall / 可用率 / RAGAS）</span><span class="lvl deep">★★★</span></div>
+            <div class="mxitem"><span>混合检索（向量 + BM25 + RRF）</span><span class="lvl deep">★★★</span></div>
+            <div class="mxitem"><span>长上下文 vs RAG · 上下文工程</span><span class="lvl deep">★★★</span></div>
+          </div>
+          <div class="mxcol">
+            <div class="mxtitle">C · 数据与部署</div>
+            <div class="mxitem"><span>Redis（会话 / 防击穿）</span><span class="lvl mid">★★</span></div>
+            <div class="mxitem"><span>SSE / WebSocket 选型</span><span class="lvl mid">★★</span></div>
+            <div class="mxitem"><span>MySQL 索引 / 事务</span><span class="lvl base">★</span></div>
+            <div class="mxitem"><span>nginx / systemd / Docker</span><span class="lvl mid">★★</span></div>
+          </div>
+          <div class="mxcol">
+            <div class="mxtitle">D · 编程语言</div>
+            <div class="mxitem"><span>Java 并发（池 / CF / 原子类）</span><span class="lvl mid">★★</span></div>
+            <div class="mxitem"><span>Spring Boot 服务交付</span><span class="lvl mid">★★</span></div>
+            <div class="mxitem"><span>Python 工程化（FastAPI / pytest）</span><span class="lvl mid">★★</span></div>
+          </div>
+        </div>
+        <p class="mxleg"><span class="lvl deep">★★★ 深度</span>：能讲三层，面试官往下挖也接得住　<span class="lvl mid">★★ 会用</span>：能讲清为什么这么选 + 实例　<span class="lvl base">★ 基础</span>：用过，别硬撑到原理层</p>
+
+        <h3 class="grp">A · AI 框架与 Agent</h3>
 
         <div class="qa">
-          <button class="qhead"><span class="qnum">A</span><span class="qtxt">AI 框架与 Agent</span><span class="qarrow">⌄</span></button>
+          <button class="qhead"><span class="qnum">A1</span><span class="qtxt">ReAct / Plan-and-Execute / Supervisor 三种编排怎么选？</span><span class="qarrow">⌄</span></button>
           <div class="abody"><div class="ainner">
-            <ul class="ulist">
-              <li><b>ReAct / Plan-and-Execute / Supervisor 怎么选？</b> 单步工具调用 ReAct 够；长任务先规划再执行用 Plan-and-Execute；多角色协作用 Supervisor。CodeCanvas 用类 Plan-and-Execute 的状态机，triagent 用 Supervisor——都是按场景选的，不是跟风。</li>
-              <li><b>Tool Calling 和 Function Calling 区别？</b> 广义同义；Function Calling 是 OpenAI 早期叫法，MCP 把「工具」标准化成协议，Agent 能接任意兼容 MCP 的服务。Mira 就是按 MCP 对外输出。</li>
-              <li><b>Agent 怎么防止跑飞？</b> 状态机 / 工作流约束流转 + 工具白名单 + 沙箱隔离 + 确定性护栏兜底（三个项目分别对应这几点）。</li>
-              <li><b>Prompt 工程常用几招？</b> 角色 + 约束 + 少样本；结构化输出约束；把可变上下文外置（需求单）；错误反馈回灌重试。</li>
-            </ul>
-            <div class="ex"><span class="lab">实 例</span>被问「为什么不用 ReAct 直接做 CodeCanvas」——答：长代码生成任务里 ReAct 自由文本容易跑偏且难回滚，我用显式状态机把「澄清/规划/生成/校验/修复」固化，出错只回修复阶段，这就是 Plan-and-Execute 思路。</div>
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>三者都是 Agent 的控制流模式，差异在「自由度 vs 可控度」的权衡：</p>
+            <p><b>ReAct</b>：边想边干（Thought + Action 循环），适合单步工具调用、短任务；<b>Plan-and-Execute</b>：先产出完整计划再逐步执行，适合长任务、要可回滚；<b>Supervisor</b>：一个调度者动态把任务派给多个专职子 Agent，适合多角色协作。选型不是跟风，是按任务特性选。</p></div>
+            <div class="ex"><span class="lab">实 例</span>CodeCanvas 用类 Plan-and-Execute 的显式状态机（澄清→规划→生成→校验→修复）：长代码生成任务里 ReAct 自由文本容易跑偏且难回滚，状态机把失败只限制在「修复」阶段。triagent 用 Supervisor：分诊涉及问诊、分诊、用药咨询多个专职角色，需要一个调度者按上下文派活。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「你那状态机算 Plan-and-Execute 还是 Workflow？」</b>——答：更接近 Workflow / 状态机：节点固定、流转显式，比纯 LLM 自决的 Plan-and-Execute 更可控，代价是灵活性。这是我<b>有意为之</b>的取舍，不是偷懒。</div>
+            <div class="dodge"><span class="lab">⚠ 别混淆</span>别把「显式状态机」硬说成「Plan-and-Execute」。说清 CodeCanvas 是固定节点状态机即可，更准确反而显专业。</div>
           </div></div>
         </div>
 
         <div class="qa">
-          <button class="qhead"><span class="qnum">B</span><span class="qtxt">RAG 与上下文</span><span class="qarrow">⌄</span></button>
+          <button class="qhead"><span class="qnum">A2</span><span class="qtxt">Agent 怎么防止「跑飞」/ 失控？</span><span class="qarrow">⌄</span></button>
           <div class="abody"><div class="ainner">
-            <ul class="ulist">
-              <li><b>切片策略怎么定？</b> 按文档类型：技术文档按标题层级、问答按语义、表格按行；避免截断。Mira 用层级切片。</li>
-              <li><b>向量 + BM25 为什么比单向量好？</b> 向量管语义、BM25 管精确关键词，互补；RRF 融合。</li>
-              <li><b>RRF / 重排序是什么？</b> RRF 按排名倒数融合多路结果；重排序用 cross-encoder 对候选精排，提升精度。</li>
-              <li><b>长期记忆怎么隔离？</b> 按用户 ID 分区存储，会话级短期滑动窗口控成本。</li>
-              <li><b>怎么评测 RAG？</b> 离线 Recall@K、端到端可用率、拒答率、RAGAS(faithfulness/answer_relevancy)；区分「检索好」和「答得好」（见 Mira Q3）。</li>
-            </ul>
-            <div class="ex"><span class="lab">实 例</span>被问「RAG 效果怎么保证」——答：不只看召回。我用 Recall@10（0.975）盯检索，用端到端可用率（88.8%）和 RAGAS faithfulness（0.914）盯「答得好不好、忠不忠实」，三指标分开看。</div>
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>四道闸，核心原则是「能不用 LLM 决策的地方就不用 LLM 决策」：</p>
+            <p>① <b>工作流 / 状态机约束流转</b>——不让 LLM 自决全局（CodeCanvas 状态机）；② <b>工具白名单</b>——只暴露必要工具，参数做 schema 校验；③ <b>沙箱隔离</b>——生成 / 执行的代码只在隔离环境跑（CodeCanvas 双沙箱）；④ <b>确定性护栏兜底</b>——不依赖 LLM 的硬规则（Mira 数字校验、triagent 急症短路）。</p></div>
+            <div class="ex"><span class="lab">实 例</span>CodeCanvas 生成的代码先在隔离沙箱跑测试，不通过不落到用户项目；Mira 碰到数字类问题先走规则对账，模型根本不介入数值计算，所以数字幻觉压到 0。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「沙箱怎么做的？真隔离吗？」</b>——答：按你<b>实际实现</b>说。若只是进程级隔离就照实说，别吹成容器级。面试前打开 CodeCanvas 确认隔离粒度。</div>
+            <div class="dodge"><span class="lab">⚠ 以你代码为准</span>「双沙箱」「隔离粒度」是简历点名的能力，被追问第三层会问隔离层级。务必本人确认实现，别照背。</div>
           </div></div>
         </div>
 
         <div class="qa">
-          <button class="qhead"><span class="qnum">C</span><span class="qtxt">数据与部署</span><span class="qarrow">⌄</span></button>
+          <button class="qhead"><span class="qnum">A3</span><span class="qtxt">MCP / Tool Calling / Function Calling 是什么，你怎么用？</span><span class="qarrow">⌄</span></button>
           <div class="abody"><div class="ainner">
-            <ul class="ulist">
-              <li><b>Redis 防击穿 / 会话存储？</b> setIfAbsent 原子占锁防击穿；TTL 控生命周期；会话 / 事实存 Redis（triagent）。</li>
-              <li><b>MySQL 索引与事务优化？</b> 高频查询建联合索引、覆盖索引减少回表；事务粒度尽量小、避免长事务锁表。</li>
-              <li><b>SSE 和 WebSocket 区别？</b> SSE 单向服务端推、走 HTTP、自动重连，适合事件流（三项目都用）；双向交互才上 WebSocket。</li>
-              <li><b>nginx 路径前缀托管？</b> location 前缀反向代理 + 静态资源，多应用共用一个域名不同路径（/canvas/ /mira/ /triagent/）。</li>
-              <li><b>Docker 部署？</b> 镜像分层、多阶段构建减体积、systemd 管进程保活、nginx 前置。</li>
-            </ul>
-            <div class="ex"><span class="lab">实 例</span>被问「三个项目为什么同一台服务器」——答：个人云主机，用 nginx 路径前缀（/canvas/、/mira/、/triagent/）反向代理三个应用，成本低、便于统一演示，systemd 保活。</div>
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>Function Calling 是 OpenAI 最早提出的「让模型决定调哪个函数」的机制；Tool Calling 是更广义的同义说法；MCP（Model Context Protocol）把「工具 / 资源」标准化成一套协议，Agent 可以接任意兼容 MCP 的服务，不用为每个工具写适配。</p>
+            <p>我 Mira 项目按 MCP 对外输出答案，就是为了让它能被别的 Agent / 系统直接消费，而不是只给人看网页。</p></div>
+            <div class="ex"><span class="lab">实 例</span>Mira 的输出层做成 MCP 兼容，意味着另一个 Agent 可以「调用 Mira 查知识库」而不用关心内部是 FastAPI 还是 LangChain——这就是协议标准化的价值。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「你自己实现过 MCP Server 吗？」</b>——答：按实际。若只是按协议规范输出、没从零写 Server，就照实说「我按 MCP 协议规范了输出格式，没从零写 Server」。诚实比夸大安全。</div>
+          </div></div>
+        </div>
+
+        <h3 class="grp">B · RAG 与上下文</h3>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">B1</span><span class="qtxt">RAG 效果怎么保证？只靠召回够吗？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>不够，而且这是高频翻车点。我把「检索质量」和「回答质量」<b>分开盯</b>：</p>
+            <p>检索层看 <b>Recall@K</b>（我 Mira 用 Recall@10 = 0.975）；回答层看<b>端到端可用率</b>（88.8%）和<b>忠实度</b> RAGAS faithfulness（0.914）。召回高 ≠ 答得好——可能检索对了但模型没用上、或编了。所以三指标必须分开看。</p></div>
+            <div class="ex"><span class="lab">实 例</span>Recall 0.975 但可用率只有 88.8%，差的那 8.7% 主要是「检索到了，但答案里把数字算错 / 编了」——这正是我加确定性数字护栏的原因。指标帮我<b>定位问题在哪一环</b>。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「可用率怎么算的？」</b>——答：390 问人工 / 规则标注的端到端测试集，逐条判「答案是否可用」，可用条数 ÷ 总数。</div>
+            <div class="dodge"><span class="lab">⚠ 口径别混</span>把「Recall」和「可用率」混为一谈是简历风险点。务必说清两者口径不同、为什么分开。</div>
           </div></div>
         </div>
 
         <div class="qa">
-          <button class="qhead"><span class="qnum">D</span><span class="qtxt">编程语言</span><span class="qarrow">⌄</span></button>
+          <button class="qhead"><span class="qnum">B2</span><span class="qtxt">为什么用向量 + BM25 混合检索？RRF / 重排序是什么？</span><span class="qarrow">⌄</span></button>
           <div class="abody"><div class="ainner">
-            <ul class="ulist">
-              <li><b>Java 并发用过哪些？</b> 线程池、ConcurrentHashMap、原子类、CompletableFuture 编排异步；集合 / 并发 / 多线程是简历写明的基础。</li>
-              <li><b>Spring Boot 怎么独立交付？</b> 分层（controller/service/dao）、统一异常处理、配置外置、Actuator 健康检、打包 jar + systemd 保活。</li>
-              <li><b>Python 工程化？</b> FastAPI 异步接口、Pydantic 校验、pytest 做评测脚本（Mira 的 1269 条测试就是脚本跑的）。</li>
-            </ul>
-            <div class="ex"><span class="lab">实 例</span>被问「怎么证明 Python 工程化能力」——答：Mira 的 1269 条护栏测试、390 问端到端测试都是用 pytest 脚本批量跑的，不是手工点的，这本身就是工程化习惯。</div>
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>单一向量检索擅长语义、但对<b>精确关键词</b>（型号、编号、专有名词）容易漏；BM25 擅长精确关键词匹配。两者互补，用 <b>RRF</b>（Reciprocal Rank Fusion，按排名倒数加权融合）合成结果，再可选 cross-encoder <b>重排序</b>精排。Mira 用的就是层级切片 + 向量 / BM25 双路召回 + RRF。</p></div>
+            <div class="ex"><span class="lab">实 例</span>用户问「型号 ABC-123 的保修期」，向量可能把语义相近的型号召回，但 BM25 能精确命中 "ABC-123" 这条；融合后正确结果排前面。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「RRF 和重排序必须都上吗？」</b>——答：RRF 成本低收益稳，基本必上；重排序（cross-encoder）更准但慢、贵，按场景。Mira 用 RRF，没上重排序（按你实际说）。</div>
+          </div></div>
+        </div>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">B3</span><span class="qtxt">长上下文 vs RAG 怎么取舍？上下文工程你怎么做的？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>两者不互斥。长上下文（整本文档塞进 prompt）简单但贵、易被无关内容干扰、有「中间遗忘」问题；RAG 把相关片段检索出来再喂，省 token、更聚焦。我的取舍：知识库类用 RAG；短小确定信息直接注入。</p>
+            <p>CodeCanvas 的「需求固化」就是上下文工程——把用户一句话需求展开成结构化需求单，反复注入，既约束模型又省 token（这也是 CodeCanvas <b>注入 token 降 85%</b> 的来源）。</p></div>
+            <div class="ex"><span class="lab">实 例</span>用户说「做个待办应用」，我先在澄清阶段把它固化成需求单（功能点、技术栈、约束），之后每个阶段都注入这份单子，模型就不会偏离，也不用每次重述长背景。</div>
+            <div class="dodge"><span class="lab">⚠ 口径别混</span>把「需求固化降 85%」说成「整体成本降 85%」是错的——口径是<b>注入 token</b>，综合成本是<b>降 75%</b>（见「简历疑点预案」数字表）。</div>
+          </div></div>
+        </div>
+
+        <h3 class="grp">C · 数据与部署</h3>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">C1</span><span class="qtxt">Redis 在你项目里干什么？防击穿怎么做？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>两个用途：① <b>会话 / 事实存储</b>（triagent 的 SessionFactStore 把多轮对话的事实存 Redis，避免每轮重算，且做了降级：Redis 不可用就退化为内存）；② <b>防缓存击穿</b>：用 <code>setIfAbsent</code> 原子占锁，避免热点 key 失效瞬间大量请求打到 DB；TTL 控生命周期。</p></div>
+            <div class="ex"><span class="lab">实 例</span>triagent 多轮问诊里，用户先说「我有高血压」，后面轮次要记住——存 Redis，后续 Agent 直接读，不重复问。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「为什么不直接用 MySQL 存会话？」</b>——答：会话数据高频读写、有时效，Redis 内存读写快、TTL 自动过期，比每次查库合适。</div>
+            <div class="dodge"><span class="lab">⚠ 别混方案</span>防击穿有「互斥锁」和「逻辑过期」两种方案，说清你用的是 <code>setIfAbsent</code> 占锁即可，别混。</div>
+          </div></div>
+        </div>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">C2</span><span class="qtxt">SSE 和 WebSocket 怎么选？为什么三个项目都用 SSE？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>SSE（Server-Sent Events）是<b>服务端单向推</b>、走 HTTP、自带断线重连，适合「服务器往浏览器推进度 / 事件流」；WebSocket 是<b>双向全双工</b>，适合需要客户端频繁发消息的。我的三个项目都是「用户发一次请求、服务器持续推生成过程」，单向就够，所以全选 SSE——实现更简单、和现有 HTTP 栈兼容好。</p></div>
+            <div class="ex"><span class="lab">实 例</span>CodeCanvas 生成代码时，前端通过 SSE 实时看到「规划中 → 生成中 → 校验中」的状态流。</div>
+            <div class="flw"><span class="lab">如果追问</span><b>「SSE 和 WebSocket 能互转吗？」</b>——答：语义不同，不能简单互转；需要双向才上 WS。</div>
+          </div></div>
+        </div>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">C3</span><span class="qtxt">MySQL 索引 / 事务优化你怎么做？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>索引上：高频查询建<b>联合索引</b>、用<b>覆盖索引</b>减少回表、避免在索引列上做函数运算导致失效。事务上：事务粒度尽量小、避免长事务持锁、把只读查询放在事务外。这是简历「数据」维度的基础项。</p></div>
+            <div class="ex"><span class="lab">实 例</span>triagent 的会话 / 消息表按 <code>user_id + 时间</code> 建联合索引，列表查询直接命中不回表。</div>
+            <div class="dodge"><span class="lab">⚠ 诚实分层</span>简历标的是「基础」。被深问到执行计划 / explain 细节时，诚实说「我做过基础的索引优化，没到 DBA 级别」，别硬撑。</div>
+          </div></div>
+        </div>
+
+        <h3 class="grp">D · 编程语言</h3>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">D1</span><span class="qtxt">Java 并发你实际用过哪些？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>线程池（ThreadPoolExecutor 参数调优：核心 / 最大线程、队列、拒绝策略）、ConcurrentHashMap、原子类（AtomicInteger 等）、CompletableFuture 编排异步任务。CodeCanvas / triagent 的服务端并发处理用到这些。</p></div>
+            <div class="ex"><span class="lab">实 例</span>triagent 多个 Agent 并行问诊 / 分诊时，用 CompletableFuture 编排「等所有子任务完成再汇总」。</div>
+            <div class="dodge"><span class="lab">⚠ 别吹原理</span>简历写的是「基础」——被问到 AQS、锁升级底层时，诚实说「了解原理，没手写过底层」，别吹。</div>
+          </div></div>
+        </div>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">D2</span><span class="qtxt">Spring Boot 你怎么把一个服务独立交付上线？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>分层（controller / service / dao 职责清晰）、统一异常处理（@ControllerAdvice）、配置外置（application.yml + 环境变量）、Actuator 暴露健康检查、打包成可执行 jar，用 <b>systemd</b> 守护进程保活、<b>nginx</b> 前置做反向代理和静态资源。</p></div>
+            <div class="ex"><span class="lab">实 例</span>我的三个项目都跑在一台云主机，nginx 用路径前缀 <code>/canvas/ /mira/ /triagent/</code> 反向代理三个 Spring Boot 服务，systemd 保活，断掉自动拉起。</div>
+            <div class="dodge"><span class="lab">⚠ 别夸大</span>别说「微服务架构」——你这是<b>单应用 + 反向代理</b>，说清即可，别夸大成分布式。</div>
+          </div></div>
+        </div>
+
+        <div class="qa">
+          <button class="qhead"><span class="qnum">D3</span><span class="qtxt">Python 工程化你怎么体现？</span><span class="qarrow">⌄</span></button>
+          <div class="abody"><div class="ainner">
+            <h4>你可以这样回答</h4>
+            <div class="ans"><p>FastAPI 写异步接口、Pydantic 做请求 / 响应校验、pytest 写评测脚本。Mira 的 <b>1269 条护栏测试 + 390 问端到端测试</b>都是 pytest 批量跑的，不是手工点的——这就是工程化习惯。</p></div>
+            <div class="ex"><span class="lab">实 例</span>每次改 Mira 的护栏逻辑，跑一遍 pytest 全量回归，确保不回归。</div>
+            <div class="dodge"><span class="lab">⚠ 别夸大</span>别把「会写脚本测试」说成「有完整 CI/CD」——按你实际说。</div>
           </div></div>
         </div>
       </section>
