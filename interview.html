@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试宝典 · 胡景晟</title>
+<meta name="description" content="胡景晟 AI 应用 / Agent 开发面试宝典：自我介绍、项目深挖、技术追问、行为面试与反问清单，基于最新版简历定制。">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#fbfaf9;--card:#fff;--line:#e9e7e4;--text:#1c1b1a;--muted:#6f6b66;
+  --accent:#5b46f2;--accent2:#8b5cf6;
+  --shadow:0 1px 2px rgba(28,27,26,.04),0 10px 28px -14px rgba(28,27,26,.14);
+  --warn:#b45309;--warnbg:#fef3e2;--warnline:#f5d9a8;
+}
+html[data-theme=dark]{
+  --bg:#0e0e11;--card:#17171c;--line:#26262e;--text:#f2f1ef;--muted:#9d9a95;
+  --accent:#8b7cff;--accent2:#a78bfa;
+  --shadow:0 1px 2px rgba(0,0,0,.35),0 14px 34px -18px rgba(0,0,0,.7);
+  --warn:#e5a94a;--warnbg:#23211b;--warnline:#3c3422;
+}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  transition:background .25s,color .25s;
+}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 22px 72px}
+@media(max-width:640px){.wrap{padding:36px 16px 56px}}
+
+.toggle{
+  position:fixed;top:18px;right:18px;z-index:50;width:38px;height:38px;
+  display:grid;place-items:center;cursor:pointer;
+  background:var(--card);border:1px solid var(--line);border-radius:50%;
+  color:var(--muted);box-shadow:var(--shadow);transition:color .2s,transform .2s;
+}
+.toggle:hover{color:var(--accent);transform:rotate(18deg)}
+
+.back{
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:22px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);font-size:13.5px;text-decoration:none;cursor:pointer;
+  transition:border-color .18s,color .18s;
+}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+
+.head{margin-bottom:30px}
+.head h1{
+  margin:0 0 6px;font-size:30px;line-height:1.25;font-weight:700;letter-spacing:-.01em;
+  background:linear-gradient(120deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.head .sub{margin:0;color:var(--muted);font-size:14.5px}
+.head .meta{margin:14px 0 0;color:var(--muted);font-size:13px}
+
+/* 布局：左目录 + 右内容 */
+.layout{display:flex;gap:36px;align-items:flex-start}
+.toc{
+  position:sticky;top:24px;flex:0 0 196px;align-self:flex-start;
+  display:flex;flex-direction:column;gap:2px;
+  border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--card);box-shadow:var(--shadow);
+  max-height:calc(100vh - 48px);overflow:auto;
+}
+.toc a{
+  display:block;padding:7px 11px;border-radius:8px;font-size:13px;color:var(--muted);
+  text-decoration:none;transition:background .15s,color .15s;cursor:pointer;
+}
+.toc a:hover{color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.toc a.active{color:var(--text);background:color-mix(in srgb,var(--accent) 12%,transparent);font-weight:600}
+.content{flex:1;min-width:0}
+
+@media(max-width:900px){
+  .layout{flex-direction:column;gap:18px}
+  .toc{position:static;flex:none;flex-direction:row;flex-wrap:wrap;max-height:none;
+    gap:6px;padding:10px}
+  .toc a{padding:6px 11px;border:1px solid var(--line);border-radius:999px}
+  .toc a.active{border-color:var(--accent)}
+}
+
+/* 区块 */
+.sec{margin:0 0 34px;scroll-margin-top:24px}
+.sec > h2{
+  margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);
+  border-left:3px solid var(--accent);padding-left:10px;
+}
+.sec > h3{margin:20px 0 10px;font-size:18px;font-weight:600;scroll-margin-top:24px}
+.sec > h4{margin:16px 0 8px;font-size:15px;font-weight:600;color:var(--text);scroll-margin-top:24px}
+
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow);
+}
+.card .tag{
+  display:inline-block;font-size:12px;padding:2px 10px;border-radius:999px;margin-bottom:10px;
+  background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+
+/* 问题 / 回答 */
+.q{font-weight:600;margin:0 0 8px;color:var(--text)}
+.q::before{content:"Q · ";color:var(--accent);font-weight:700}
+.a{margin:0;padding-left:2px}
+.a li{margin:5px 0;color:var(--muted)}
+.a li b{color:var(--text);font-weight:600}
+.a code,.inline-code{
+  background:color-mix(in srgb,var(--text) 9%,transparent);padding:1px 6px;border-radius:5px;
+  font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+/* 追问 callout */
+.note,.warn{
+  border-radius:11px;padding:12px 14px;margin:10px 0;font-size:13.5px;line-height:1.7;
+}
+.note{background:color-mix(in srgb,var(--accent) 8%,transparent);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent)}
+.note b{color:var(--accent)}
+.warn{background:var(--warnbg);border:1px solid var(--warnline);color:var(--warn)}
+.warn b{color:var(--warn)}
+
+/* 数字口径表 */
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+.tbl th,.tbl td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+.tbl th{background:color-mix(in srgb,var(--accent) 7%,transparent);color:var(--text);font-weight:600}
+.tbl td{color:var(--muted)}
+.tbl td b{color:var(--text)}
+
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;
+  border:1px solid var(--line);color:var(--muted);margin:2px 4px 2px 0}
+ul.clean{list-style:none;margin:6px 0;padding:0}
+ul.clean li{padding:4px 0;color:var(--muted)}
+ul.clean li::before{content:"▸ ";color:var(--accent)}
+
+footer{
+  margin-top:40px;padding-top:20px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="toggle" id="toggle" title="切换主题" role="button" tabindex="0">◐</div>
+
+<div class="wrap">
+  <a class="back" href="index.html">← 返回主页</a>
+
+  <header class="head">
+    <h1>面试宝典</h1>
+    <p class="sub">AI 应用开发 / Agent 开发方向 · 基于最新版简历（V8）定制</p>
+    <p class="meta">随时可查的"嘴替"：自我介绍、三大项目深挖、技术追问、两处弱项口径、行为面试、反问清单与疑点预案。所有数字以你简历为准，<b>面试前请对照自己代码再过一遍第三层细节</b>。</p>
+  </header>
+
+  <div class="layout">
+    <!-- 目录 -->
+    <nav class="toc" id="toc">
+      <a href="#s1">1 · 自我介绍</a>
+      <a href="#s2">2 · 项目深挖 · CodeCanvas</a>
+      <a href="#s3">3 · 项目深挖 · Mira</a>
+      <a href="#s4">4 · 项目深挖 · triagent</a>
+      <a href="#s5">5 · 技术栈追问</a>
+      <a href="#s6">6 · 两处必准备口径</a>
+      <a href="#s7">7 · 行为面试</a>
+      <a href="#s8">8 · 反问清单</a>
+      <a href="#s9">9 · 简历疑点预案</a>
+      <a href="#s10">10 · 上场前 Checklist</a>
+    </nav>
+
+    <main class="content">
+
+      <!-- 1 自我介绍 -->
+      <section class="sec" id="s1">
+        <h2>自我介绍</h2>
+        <div class="card">
+          <h3 style="margin-top:0">30 秒版（电梯陈述）</h3>
+          <p class="a" style="margin:0">我是胡景晟，河南理工大学计算机科学与技术 2027 届。我做的是 <b>AI 应用 / Agent 开发</b>——不是"接个大模型"那种，而是把模型真正做成能用的系统：输出可用、成本可控、出错能降级。我自己从 0 到 1 上线了三个项目：一句话生成 Web 应用的 <b>CodeCanvas</b>、带确定性数字护栏的 RAG 客服 <b>Mira</b>、多 Agent 医疗分诊 <b>triagent</b>，全部公网可访问。技术栈以 Java / Python 为主，Spring AI、LangChain4j、FastAPI 都用过。</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">1 分钟版（标准开场）</h3>
+          <p class="a" style="margin:0">我在意的是模型之外的工程问题。拿 CodeCanvas 说，它让不会写代码的人一句话生成可运行 Web 应用，核心是"需求固化 + 自检修复"闭环：把五阶段状态机（澄清→规划→生成→校验→修复）串起来，长任务里只注入固化后的需求单而非全量上下文，连续 8 轮注入量稳定在约 7k token；再用"错误位置回溯"只改出错行、按任务路由模型，综合成本降了约 75%。Mira 和 triagent 则是两个不同方向的护栏实践：一个用纯规则校验把财务数字幻觉压到 0，一个用状态机强制短路急症、让分诊安全 0 失误。我熟悉 Java/Python 全栈、RAG 检索重排、Agent 编排和 Docker/SSE 部署，能独立从 Prompt 工程做到前端交付。</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-top:0">3 分钟版（被要求展开时）</h3>
+          <p class="a" style="margin:0">在 1 分钟版基础上，按"问题→做法→结果→复盘"补三层：① CodeCanvas 的痛点是大模型生成代码不可控易报错，我用确定性静态校验（标签闭合/语法/占位残留）卡住交付门槛，运行时报错由探针捕获并自动重做；② Mira 的痛点是 RAG 幻觉和数字不可信，我让每个数字必须能在检索原文里对账，对不上就拒答，用 AST 白名单求值做纯规则校验，不用模型自查；③ triagent 的痛点是医疗场景不能逻辑混乱，我用 Supervisor 多 Agent 分工 + 急症状态机短路，分诊和预约共享结论避免冲突。三个项目覆盖了"生成可控 / 检索可信 / 协作安全"三条线，正好是我对 Agent 落地工程化的理解。</p>
+          <div class="note">开场就<b>抛钩子</b>：每说一个项目顺手点一句"这个我后面可以展开"。面试官大概率会从你最亮的点往下挖。</div>
+        </div>
+      </section>
+
+      <!-- 2 CodeCanvas -->
+      <section class="sec" id="s2">
+        <h2>项目深挖 · CodeCanvas</h2>
+        <div class="card">
+          <span class="tag">一句话定位</span>
+          <p style="margin:0;color:var(--muted)">让不会写代码的人通过一句话生成可用 Web 应用；用"需求固化 + 自修复"机制解决大模型生成代码不可控、易报错的痛点。技术栈：Java · Spring Boot · LangChain4j · nginx · systemd · SSE。地址 <code>http://114.215.186.113/canvas/</code></p>
+        </div>
+
+        <div class="card">
+          <h4>Q1 · 整体架构？五阶段状态机怎么设计的？为什么不直接用 ReAct 一把梭？</h4>
+          <ul class="a">
+            <li><b>阶段机：</b>澄清 → 规划 → 生成 → 校验 → 修复，每个阶段有明确输入输出契约，状态显式保存在会话里。</li>
+            <li><b>为什么不用纯 ReAct：</b>ReAct 把"想"和"做"混在自由文本里，长任务容易跑偏、难回滚；状态机把非结构化需求<b>固化成标准化 PRD + Token 预算</b>，每一步可观测、可重入、可审计。</li>
+            <li><b>好处：</b>出错时回到"修复"阶段局部重试，而不是整轮推倒重来。</li>
+          </ul>
+          <div class="note">追问预案：被问"状态机怎么持久化"——答会话级状态对象存 Redis / 文件，SSE 把阶段事件推给前端；被问"阶段之间怎么流转判定"——靠每阶段的结构化输出（见第 6 节）做通过/失败判定。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q2 · "需求固化"具体怎么做？为什么能大幅降 token？</h4>
+          <ul class="a">
+            <li>首轮把模糊需求收敛成<b>需求单（PRD）+ 文件清单 + 变更摘要</b>，后续轮次只带"需求单 + 本次变更 + 相关文件"，不再重发全量聊天历史。</li>
+            <li><b>结果：</b>连续 8 轮对话，单轮注入量稳定在约 <b>7k token</b>，相比每轮重发上下文注入量节省约 <b>85%</b>，且生成质量未下降。</li>
+          </ul>
+          <div class="warn">⚠️ 口径提醒：简历里"节省 85%"指<b>注入 token 的削减幅度</b>，"成本降 75%"指<b>综合调用成本</b>（含模型路由）。两者口径不同、不矛盾——面试时<b>先说清口径再报数</b>，别混着说。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q3 · 自检修复闭环：运行时报错怎么捕获？"错误位置回溯"怎么实现？</h4>
+          <ul class="a">
+            <li><b>探针捕获：</b>生成物在沙箱里实际运行，页面运行时报错 / 编译错误被探针捕获，回传错误栈。</li>
+            <li><b>错误位置回溯：</b>解析错误栈定位到具体文件与行号，<b>只重写/修补出错的那一段</b>，而不是全量重新生成——这正是成本可控的关键。</li>
+            <li><b>护栏：</b>4 项静态检查（标签闭合 / 脚本语法 / 占位残留等）卡住交付门槛，先过确定性校验才有资格交给用户。</li>
+            <li><b>结果：</b>12 个需求复跑，首轮通过率 100%（48/48）。</li>
+          </ul>
+          <div class="note">追问预案：被问"4 项检查具体哪 4 项、为什么是这 4 项"——按简历口径是结构与语法类；具体实现请以你代码为准（标签闭合、脚本语法、占位符残留、入口可加载）。被问"全量重生成和局部修补怎么选"——按错误是否跨文件/跨函数决定，局部能修就绝不重生成。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q4 · 成本降 75% 是怎么测出来的？模型路由怎么做的？</h4>
+          <ul class="a">
+            <li><b>模型分级路由：</b>按任务类型（简单脚手架 vs 复杂逻辑）选不同档位模型，贵模型只用在刀刃上。</li>
+            <li><b>成本核算：</b>对照厂商真实价目表核算 token 单价，同口径对比"全量重发 + 单模型"基线 vs "固化 + 路由 + 局部修复"方案。</li>
+            <li>两项叠加 → 同一批任务实测综合成本下降约 <b>75%</b>。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4>Q5 · "双沙箱"是什么？受压工具自主调用场景怎么防滥用？</h4>
+          <ul class="a">
+            <li>生成物在<b>隔离沙箱</b>里预览/运行，工具调用也限制在沙箱内，避免生成物越权访问宿主或外部资源。</li>
+            <li>自主调用场景（模型可调用工具）下，工具白名单 + 沙箱边界确保"压不住的工具也不会乱跑"。</li>
+          </ul>
+          <div class="note">追问预案：被问"沙箱怎么隔离"——答容器/进程级隔离 + 资源限额 + 网络策略；具体实现请以你部署为准（简历提到 Docker/systemd/nginx）。</div>
+        </div>
+      </section>
+
+      <!-- 3 Mira -->
+      <section class="sec" id="s3">
+        <h2>项目深挖 · Mira</h2>
+        <div class="card">
+          <span class="tag">一句话定位</span>
+          <p style="margin:0;color:var(--muted)">面向企业客服的多模态 RAG 问答系统，支持图片理解与来源溯源，用确定性护栏把数字幻觉压到 0。技术栈：Python · FastAPI · LanceDB · bge-small-zh · 数字校验 · 拒答护栏。地址 <code>http://114.215.186.113/mira/</code></p>
+        </div>
+
+        <div class="card">
+          <h4>Q1 · RAG 整体流程？为什么选 LanceDB + bge-small-zh？层级切片 + BM25 双路召回怎么做的？</h4>
+          <ul class="a">
+            <li><b>流程：</b>文档解析 → 切片向量化入库（LanceDB）→ 查询向量召回 + BM25 召回 → RRF 融合 → 重排序 → 拼接上下文 → 生成 + 数字护栏。</li>
+            <li><b>选型：</b>LanceDB 嵌入式向量库、零运维；bge-small-zh 中文召回质量够用且体积小、跑得快。</li>
+            <li><b>层级切片：</b>单一切片会截断语义，改成"先大块、再按标题/段落细分"的层级结构，小块保语义、大块保上下文。</li>
+            <li><b>双路召回 + RRF：</b>向量召回管语义、BM25 管关键词精确匹配，RRF 倒数排名融合互补。</li>
+            <li><b>结果：</b>KB 级生产对齐评测（n=80）Recall@10 达 <b>0.975</b>、Recall@3 达 <b>0.900</b>；390 问离线测试 Recall 由 0.347 提升至 0.400（+5.3pp）。</li>
+          </ul>
+          <div class="note">追问预案：被问"RRF 权重怎么定"——标准 RRF 是等权（1/(k+rank)）；自适应加权可按查询类型调向量/BM25 占比，具体策略以你实现为准。被问"重排序用什么"——轻量 cross-encoder 或规则打分，简历未写具体模型，别瞎编。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q2 · 确定性护栏：为什么不让模型自己检查？纯规则校验怎么做？</h4>
+          <ul class="a">
+            <li><b>为什么不用 LLM 自查：</b>模型会"顺着自己编的答案自洽"，自查不可靠；财务/数字场景错一个数字就是事故。</li>
+            <li><b>纯规则校验：</b>答案里的每个数字都去检索原文里<b>强制对账</b>，对不上就拒答并附原文；校验层是规则实现（AST 白名单求值，禁用 eval），不调模型。</li>
+            <li><b>结果：</b>1269 条测试集，正确回答误拒 <b>0 条</b>，关键数字幻觉率降至 <b>0</b>。</li>
+          </ul>
+          <div class="note">追问预案：被问"误拒 0 会不会漏拒（把错的放过去）"——诚实答：误拒和漏拒是两条指标，测试集聚焦误拒；漏拒靠规则覆盖度 + 抽样评测兜底，承认这是持续补规则的活。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q3 · 为什么 Recall@10 高达 0.975，端到端可用率却只有 88.8%？差距在哪？</h4>
+          <ul class="a">
+            <li>召回高 ≠ 答得好。差距来自三处：① 检索到了但<b>生成阶段没用对</b>（指令/拼接问题）；② 多模态/复杂意图<b>路由或理解出错</b>；③ 护栏<b>主动拒答</b>（2.8%）本就不算"可用"。</li>
+            <li>所以可用率（88.8%）是"检索 + 生成 + 护栏"的联合结果，比单看召回诚实得多。</li>
+            <li>RAGAS faithfulness <b>0.914</b>，说明生成内容对检索依据的依赖度 / 忠实度达标。</li>
+          </ul>
+          <div class="warn">⚠️ 这是个<b>高频追问</b>，务必主动讲清"召回和可用率不是一回事"，体现你对评测的理解，而不是被问住。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q4 · 多模态与记忆：图片怎么理解？长期记忆怎么隔离？</h4>
+          <ul class="a">
+            <li><b>多模态：</b>图片转文本 / 视觉模型提取后进入同一检索与问答链路；意图路由决定走文本还是多模态分支。</li>
+            <li><b>记忆：</b>短期用会话滑动窗口（保近因、控成本）；长期用户画像<b>按用户隔离存储</b>，避免串号。</li>
+            <li>390 问端到端可用率 88.8%，拒答率 2.8%（11/390）。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 4 triagent -->
+      <section class="sec" id="s4">
+        <h2>项目深挖 · triagent</h2>
+        <div class="card">
+          <span class="tag">一句话定位</span>
+          <p style="margin:0;color:var(--muted)">模拟真实就医流程的多 Agent 分诊系统，用"固定规则 + 多 Agent 协作"解决单一大模型在医疗场景逻辑混乱、不安全的问题。技术栈：Java · Spring Boot 3.2 · Spring AI 1.0.0 GA · DeepSeek · Supervisor 多 Agent · MySQL · Redis。地址 <code>http://114.215.186.113/triagent/</code></p>
+        </div>
+
+        <div class="card">
+          <h4>Q1 · 为什么上多 Agent？Supervisor 模式怎么编排？</h4>
+          <ul class="a">
+            <li><b>为什么：</b>单一大模型在复杂医疗流程里容易"一步错步步错"，分工能隔离职责、各自可被独立评测。</li>
+            <li><b>角色：</b>预诊 Agent（收症状）、挂号 Agent（推荐科室）、评判 Agent（校验/仲裁）；Supervisor 负责调度与汇总。</li>
+            <li><b>编排：</b>Supervisor 按流程状态决定下一步交给谁，不是完全自由对话。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4>Q2 · 安全优先：急症为什么能 0 次模型调用、6–24ms 返回？怎么判定"红旗"？</h4>
+          <ul class="a">
+            <li><b>急症短路：</b>识别到红旗症状（如胸痛、意识障碍）由<b>状态机强制短路</b>，直接走急诊分支，不经过模型推理。</li>
+            <li><b>为什么快：</b>纯规则匹配，无 LLM 调用，所以 0 次模型调用、6–24ms 返回。</li>
+            <li><b>双重校验：</b>"固定规则 + LLM-as-Judge"——规则保底线（安全绝对不依赖模型），Judge 做软性质量。</li>
+            <li><b>结果：</b>30 例 golden set 双轨评测，29 例分诊科室命中，安全性 29/29 全通过，判轻（危险方向）0 例。</li>
+          </ul>
+          <div class="note">追问预案：被问"规则和 Judge 冲突听谁的"——答规则优先（安全不可协商），Judge 只补充非安全维度的体验优化。</div>
+        </div>
+
+        <div class="card">
+          <h4>Q3 · 跨 Agent 事实共享：SessionFactStore 怎么解决多轮信息丢失？怎么避免"一边说急诊一边推荐挂号"？</h4>
+          <ul class="a">
+            <li><b>共享事实：</b>每轮抽取结构化事实存入 SessionFactStore，后续 Agent 直接读共享状态，不依赖"模型还记得不记得"。</li>
+            <li><b>冲突拦截：</b>分诊一旦判定急症，该结论进入共享状态；预约 Agent 在下单前读状态，命中急症则<b>确定性拦截</b>普通挂号，避免逻辑冲突。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h4>Q4 · Redis 故障分级降级怎么设计？为什么记忆丢了只告警不阻断？</h4>
+          <ul class="a">
+            <li><b>分级降级：</b>Redis 抖动 → 本地内存兜短期；Redis 不可用 → 降级为无状态会话，核心问诊流程不依赖记忆也能跑。</li>
+            <li><b>为什么只告警不阻断：</b>问诊是核心链路，记忆丢失影响体验但不致命；用告警让运维感知，而非把用户挡在门外。</li>
+            <li><b>透明化：</b>SSE 下发事件流展示推理过程，增强信任。</li>
+          </ul>
+          <div class="note">追问预案：被问"Spring AI 1.0 GA 和 LangChain4j 区别"——答 Spring AI 更贴 Spring 生态、ChatClient/Advisor 抽象统一多模型；LangChain4j 更轻、Java 原生。CodeCanvas 用 LangChain4j、triagent 用 Spring AI，正好对比过两者。</div>
+        </div>
+      </section>
+
+      <!-- 5 技术栈追问 -->
+      <section class="sec" id="s5">
+        <h2>技术栈追问（按 JD 维度）</h2>
+
+        <div class="card">
+          <h3 style="margin-top:0">AI 框架与 Agent</h3>
+          <ul class="clean">
+            <li><b>ReAct / Plan-and-Execute / Supervisor 怎么选？</b> 单步工具调用 ReAct 够；长任务先规划再执行用 Plan-and-Execute；多角色协作用 Supervisor。CodeCanvas 用状态机（类 Plan-and-Execute），triagent 用 Supervisor。</li>
+            <li><b>Tool Calling 和 Function Calling 区别？</b> 广义同义；Function Calling 是 OpenAI 早期叫法，MCP 把"工具"标准化成协议，Agent 能接任意兼容 MCP 的服务。</li>
+            <li><b>Agent 怎么防止跑飞？</b> 状态机/工作流约束流转、工具白名单、沙箱隔离、确定性护栏兜底（见三项目）。</li>
+            <li><b>Prompt 工程你常用的几招？</b> 角色+约束+示例(少样本)、结构化输出约束、把可变上下文外置（需求单）、错误反馈回灌重试。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">RAG 与上下文</h3>
+          <ul class="clean">
+            <li><b>切片策略怎么定？</b> 按文档类型：技术文档按标题层级、问答按语义、表格按行；避免截断。Mira 用层级切片。</li>
+            <li><b>向量 + BM25 为什么比单向量好？</b> 向量管语义、BM25 管精确关键词，互补；RRF 融合。</li>
+            <li><b>RRF / 重排序是什么？</b> RRF 按排名倒数融合多路结果；重排序用 cross-encoder 对候选精排，提升精度。</li>
+            <li><b>长期记忆怎么隔离？</b> 按用户 ID 分区存储，会话级短期滑动窗口控成本。</li>
+            <li><b>怎么评测 RAG？</b> 离线 Recall@K、端到端可用率、拒答率、RAGAS(faithfulness/answer_relevancy)；区分"检索好"和"答得好"。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">数据与部署</h3>
+          <ul class="clean">
+            <li><b>Redis 防击穿 / 会话存储？</b> setIfAbsent 原子占锁防击穿；TTL 控生命周期；会话/事实存 Redis（triagent）。</li>
+            <li><b>MySQL 索引与事务优化？</b> 高频查询建联合索引、覆盖索引减少回表；事务粒度尽量小、避免长事务锁表。</li>
+            <li><b>SSE 和 WebSocket 区别？</b> SSE 单向服务端推、走 HTTP、自动重连，适合事件流（三项目都用）；双向交互才上 WebSocket。</li>
+            <li><b>nginx 路径前缀托管？</b> location 前缀反向代理 + 静态资源，多应用共用一个域名不同路径（/canvas/ /mira/ /triagent/）。</li>
+            <li><b>Docker 部署你怎么做？</b> 镜像分层、多阶段构建减体积、systemd 管进程保活、nginx 前置。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">编程语言</h3>
+          <ul class="clean">
+            <li><b>Java 并发你用过哪些？</b> 线程池、ConcurrentHashMap、原子类、CompletableFuture 编排异步；集合/并发/多线程是简历写明的基础。</li>
+            <li><b>Spring Boot 你怎么独立交付？</b> 分层（controller/service/dao）、统一异常处理、配置外置、Actuator 健康检、打包 jar + systemd 保活。</li>
+            <li><b>Python 工程化？</b> FastAPI 异步接口、Pydantic 校验、pytest 做评测脚本（Mira 的 1269 条测试就是脚本跑的）。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 6 两处必准备口径 -->
+      <section class="sec" id="s6">
+        <h2>两处必准备口径（简历写到了，面试前必须能讲清）</h2>
+        <div class="warn">这两项是简历"专业技能"里点名的开发模式，面试官极可能顺着挖。下面给<b>可防御的标准说法</b>，但<b>具体实现细节请你对照自己代码确认</b>——别照背一个你没真正跑过的版本。</div>
+
+        <div class="card">
+          <h3 style="margin-top:0">① Advisor 拦截链（LangChain4j，用在 CodeCanvas）</h3>
+          <ul class="a">
+            <li><b>是什么：</b>LangChain4j 的 Advisor 是<b>围绕模型调用的拦截器链</b>，类似 Servlet Filter / Spring Interceptor，在请求发出前、响应回来后插入逻辑，且可排序串联。</li>
+            <li><b>在 CodeCanvas 怎么用（可防御口径）：</b>用几条 Advisor 把横切逻辑从业务里摘出来——① <b>上下文注入 Advisor</b>：把固化后的需求单 + Token 预算拼进 system prompt；② <b>审计/日志 Advisor</b>：记录每次请求的输入输出与耗时；③ <b>结构化输出 + 重试 Advisor</b>：负责把模型输出解析成目标结构，失败则按策略重试（见下）。</li>
+            <li><b>为什么好：</b>链路可组合、可单独测试，业务代码只关心"调模型"，横切关注点全在链上。</li>
+          </ul>
+          <div class="note">追问预案：被问"Advisor 和直接写代码包一层有什么区别"——答统一了横切逻辑的接入点、可排序可复用、和 ChatClient 生命周期绑定；被问"多个 Advisor 顺序怎么定"——按"注入→调用→解析→日志"的依赖关系排。</div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0">② 结构化输出与解析失败重试</h3>
+          <ul class="a">
+            <li><b>怎么做：</b>用框架的结构化输出能力（如 LangChain4j 的 <code>@StructuredPrompt</code> / AiServices 返回 POJO，或 JSON Schema 约束），让模型按固定结构返回，而非自由文本。</li>
+            <li><b>解析失败重试（可防御口径）：</b>解析异常时，把"错误信息 + 原始输出"回灌进下一轮 prompt，让模型修正；<b>建议对外口径：最多重试 3 次</b>。</li>
+            <li><b>兜底策略（必须有）：</b>3 次仍失败 → 不把未解析内容透传给下游，而是走<b>确定性兜底</b>：返回安全默认 / 明确提示用户重试 / 降级到人工或固定流程。</li>
+            <li><b>为什么重要：</b>这是 Agent 能"跑得稳"的关键——模型不是每次都吐合法 JSON，没有重试+兜底，下游直接崩。</li>
+          </ul>
+          <div class="warn">⚠️ 你简历写的是"解析失败重试"，但没写具体次数和兜底。面试前请确认你代码里<b>实际重试几次、失败怎么处理</b>，把上面的"3 次 + 兜底"替换成你的真实实现，否则被追问第三层会露馅。</div>
+        </div>
+      </section>
+
+      <!-- 7 行为面试 -->
+      <section class="sec" id="s7">
+        <h2>行为面试（STAR：情境-任务-行动-结果）</h2>
+        <div class="card">
+          <ul class="clean">
+            <li><b>为什么选 AI 应用 / Agent 方向？</b> 不是追热点，是从自己做项目的体感出发：模型能力够了，缺的是把它做成稳定系统的工程能力，而这恰恰是我想深耕的。</li>
+            <li><b>没有实习经历，怎么证明能力？</b> 用"三个已上线公网项目 + 开源仓库(star) + 技术博客"替代——作品驱动，且每个项目都有可验证的评测数字，比一段观摩式实习更有说服力。</li>
+            <li><b>双非背景怎么看？</b> 不回避。坦诚学校平台有限，所以更靠自驱：独立做完并部署三个系统、啃下 Spring AI/LangChain4j 等框架、坚持写博客沉淀。</li>
+            <li><b>最大的失败 / 踩坑？</b> 准备一个真实例子（如某次长任务 token 爆炸 / 某次 RAG 召回高但答错），重点讲<b>怎么发现、怎么量化、怎么修、复盘出什么</b>。</li>
+            <li><b>团队协作经历？</b> 学校项目多为独立开发，诚实说；强调"能独立交付"也是中小团队看重的，同时表达愿意在协作流程（code review / 文档 / 对齐）上补。</li>
+            <li><b>职业规划？</b> 1–2 年吃透 Agent 工程化落地（成本/质量/安全三角），3–5 年能独立负责一条 AI 产品线。</li>
+          </ul>
+          <div class="note">行为题别只说"我学到了很多"。每题收尾都落到一个<b>可验证的事实或数字</b>上，和项目经历互相印证。</div>
+        </div>
+      </section>
+
+      <!-- 8 反问 -->
+      <section class="sec" id="s8">
+        <h2>反问清单（问面试官，别只说"没啥问题"）</h2>
+        <div class="card">
+          <ul class="clean">
+            <li>这个岗位目前 AI / Agent 落地到哪一步了？技术栈是自研还是接开源框架？</li>
+            <li>团队现在最痛的问题是什么？是效果、成本、还是落地稳定性？</li>
+            <li>对校招生前 6 个月的期待是什么？有没有导师带？</li>
+            <li>模型成本 / 幻觉治理这块，是算法侧还是工程侧在扛？</li>
+            <li>（偏落地）你们怎么评测 Agent / RAG 的线上效果？有没有离线评测集？</li>
+          </ul>
+          <div class="note">挑 2–3 个和你投的岗位最相关的问，别全问。问"痛点"和"评测"最能体现你是工程思维。</div>
+        </div>
+      </section>
+
+      <!-- 9 疑点预案 -->
+      <section class="sec" id="s9">
+        <h2>简历疑点预案（提前准备好，别现场编）</h2>
+        <div class="card">
+          <h4>数字口径统一</h4>
+          <table class="tbl">
+            <tr><th>指标</th><th>口径</th><th>建议表述</th></tr>
+            <tr><td>CodeCanvas 成本</td><td>注入 token 节省 ≈ 85%；综合调用成本 ↓ ≈ 75%</td><td><b>两个都真实、口径不同</b>：先说"注入 token 砍了 85%"，再说"综合成本降了 75%"，别混为一句"降了 8 成"</td></tr>
+            <tr><td>Mira 召回 vs 可用率</td><td>Recall@10 0.975 / 可用率 88.8%</td><td>主动解释两者不是一回事（见 Q3）</td></tr>
+          </table>
+        </div>
+        <div class="card">
+          <h4>身份与经历类</h4>
+          <ul class="clean">
+            <li><b>"三个项目都是你做的吗？"</b> 是，全栈独立开发并部署，GitHub 仓库 + 公网 demo 都可现场打开验证。</li>
+            <li><b>"没有实习？"</b> 作品驱动路线，三个上线项目即"实战履历"，每个都有评测数字。</li>
+            <li><b>"双非 + 无实习，凭什么？"</b> 不回避学历，强调自驱与可验证产出（star 仓库、线上系统、博客）。</li>
+            <li><b>"为什么三个项目地址都是同一台服务器？"</b> 个人云主机，nginx 路径前缀托管三个应用，成本低、便于演示。</li>
+          </ul>
+        </div>
+        <div class="warn">⚠️ 所有数字以你简历原文为准。本宝典里的"85% / 75% / 88.8%"等都直接来自你的 V8 简历；如果哪天你改了简历数字，记得同步改这里。</div>
+      </section>
+
+      <!-- 10 checklist -->
+      <section class="sec" id="s10">
+        <h2>上场前 Checklist</h2>
+        <div class="card">
+          <ul class="clean">
+            <li>☐ 三个项目 GitHub 链接可访问、demo 在线（面试前 1 小时自查一遍）</li>
+            <li>☐ 简历所有数字背一遍，统一成本口径（85% 注入 / 75% 综合）</li>
+            <li>☐ 30s / 1min / 3min 自我介绍各默念两遍</li>
+            <li>☐ 两处弱项口径（Advisor 链 / 结构化输出重试）对照自己代码确认细节</li>
+            <li>☐ 准备 1 个真实失败案例（STAR 四段）</li>
+            <li>☐ 准备 2–3 个反问</li>
+            <li>☐ 证书截图（CET-6 / 鸿蒙认证 / 竞赛二等奖）在手，备查</li>
+            <li>☐ 把本页在手机上打开过一遍，确保现场能随时翻</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer>
+        <span>© <span id="yr">2026</span> 胡景晟 · 面试宝典</span>
+        <span><a href="index.html">uniquedevjing.github.io/portfolio</a></span>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var root=document.documentElement, tg=document.getElementById('toggle');
+  var saved=null;
+  try{saved=localStorage.getItem('theme');}catch(e){}
+  if(saved==='light'){root.removeAttribute('data-theme');}
+  else if(saved==='dark'){root.setAttribute('data-theme','dark');}
+  else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){root.setAttribute('data-theme','dark');}
+  tg.onclick=function(){
+    var dark=root.getAttribute('data-theme')==='dark';
+    if(dark){root.removeAttribute('data-theme');}else{root.setAttribute('data-theme','dark');}
+    try{localStorage.setItem('theme',dark?'light':'dark');}catch(e){}
+  };
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  // 目录高亮 + 平滑滚动
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  function onScroll(){
+    var y=window.scrollY+120, idx=0;
+    for(var i=0;i<secs.length;i++){ if(secs[i]&&secs[i].offsetTop<=y){idx=i;} }
+    links.forEach(function(a,i){a.classList.toggle('active',i===idx);});
+  }
+  links.forEach(function(a){
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      var t=document.querySelector(a.getAttribute('href'));
+      if(t){window.scrollTo({top:t.offsetTop-20,behavior:'smooth'});}
+    });
+  });
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>
